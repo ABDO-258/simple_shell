@@ -14,7 +14,7 @@ char *get_cmd_path(char *command)
 	struct stat starf;
 
 	path = strdup(path2);
-	path_token = strtok(path, ":");
+	path_token = _strtok(path, ":");
 
 	while (path_token)
 	{
@@ -40,7 +40,7 @@ char *get_cmd_path(char *command)
 
 
 		free(full_cmd);
-		path_token = strtok(NULL, ":");
+		path_token = _strtok(NULL, ":");
 	}
 	free(path);
 	printf("Command not found.\n");

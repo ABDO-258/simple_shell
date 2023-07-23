@@ -10,12 +10,11 @@
 */
 char *_getenv(const char *name)
 {
-	char **env = environ;
 	unsigned int i;
 	size_t len = strlen(name);
 
 
-	for (i = 0; env[i] != NULL; i++)
+	for (i = 0; environ[i] != NULL; i++)
 	{
 		if (strncmp(name, environ[i], len) == 0 && environ[i][len] == '=')
 		{
