@@ -52,17 +52,26 @@ int main(int argc, char **argv, char **env)
 	char *ptprompt = malloc(sizeof(char) * n);
 	ssize_t char_input;
 
+	if (ptprompt == NULL) 
+	{
+		perror("Error: malloc failed");
+		exit(EXIT_FAILURE);
+	}
+
 	while (1)
 	{
 		/*promptprint();*/
 		char_input = (getline(&ptprompt, &n, stdin));
 		if (char_input == 1)
 		{
+
 			continue;
 		}
 		if (char_input != -1)
 		{
+			/*printf("%ld\n", char_input);*/
 			shell_cmd(ptprompt, argc, argv, env);
+			/*printf("%ld after shell_cmd\n", char_input);*/
 		}
 		else
 			break;
@@ -88,8 +97,9 @@ void shell_cmd(char *string, int argc, char **argv, char **env)
 	(void)argc;
 	(void)argv;
 
-
 			cmd = strtok(string, " \t\n");
+			if(cmd == NULL)
+				return;
 			for (i = 0; cmd != NULL; i++)
 			{
 				cmmd[i] = cmd;
