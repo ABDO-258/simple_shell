@@ -89,11 +89,11 @@ void shell_cmd(char *string, int argc, char **argv, char **env)
 	(void)argv;
 
 
-			cmd = _strtok(string, " \t\n");
+			cmd = strtok(string, " \t\n");
 			for (i = 0; cmd != NULL; i++)
 			{
 				cmmd[i] = cmd;
-				cmd = _strtok(NULL, " \n");
+				cmd = strtok(NULL, " \n");
 			}
 			cmmd[i] = NULL;
 
