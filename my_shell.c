@@ -110,6 +110,12 @@ void shell_cmd(char *string, int argc, char **argv, char **env)
 
 			if (strcmp(cmmd[0], "exit") == 0)
 			{
+				if (!cmmd[1])
+				{
+					free(string);
+					_exit(0);
+				}
+				else
 				my_exit(cmmd, argc, argv, env);
 			}
 
