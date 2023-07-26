@@ -95,7 +95,7 @@ void shell_cmd(char *string, int argc, char **argv, char **env)
 	struct stat strtzrsa;
 
 	(void)argc;
-	(void)argv;
+	/*(void)argv;*/
 
 			cmd = strtok(string, " \t\n");
 			if(cmd == NULL)
@@ -118,7 +118,7 @@ void shell_cmd(char *string, int argc, char **argv, char **env)
 			printenvironement();
 
 			if (cmmd[0] != NULL && stat(cmmd[0], &strtzrsa) != 0)
-				cmd_path = get_cmd_path(cmmd[0]);
+				cmd_path = get_cmd_path(cmmd[0], argv);
 			if (stat(cmmd[0], &strtzrsa) == 0)
 				cmd_execution(cmmd[0], cmmd, env);
 			else if (cmd_path)

@@ -6,7 +6,7 @@
 *
 *Return:  command path
 */
-char *get_cmd_path(char *command)
+char *get_cmd_path(char *command, char **argv)
 {
 	char *path2 = _getenv("PATH"), *path;
 	char *path_token;
@@ -43,6 +43,9 @@ char *get_cmd_path(char *command)
 		path_token = _strtok(NULL, ":");
 	}
 	free(path);
+	fprintf(stderr, "%s: %d: %s: not found\n", argv[0], 1, command);
+            /* Exit with status 127 to indicate command not found*/
+            _exit(127);
 	printf("Command not found.\n");
 	return (NULL);
 }
