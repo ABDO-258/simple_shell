@@ -55,7 +55,7 @@ int main(int argc, char **argv, char **env)
 	while (1)
 	{
 		/*promptprint();*/
-		char_input = (_getline(&ptprompt, &n, stdin));
+		char_input = (getline(&ptprompt, &n, stdin));
 		if (char_input == 1)
 		{
 			continue;
