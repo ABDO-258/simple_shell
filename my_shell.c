@@ -125,12 +125,15 @@ int shell_cmd(char *string, int argc, char **argv, char **env)
 			printenvironement();
 
 			if (cmmd[0] != NULL && stat(cmmd[0], &strtzrsa) != 0)
-				cmd_path = get_cmd_path(cmmd[0], argv);
-			if(!cmd_path)
 			{
+				cmd_path = get_cmd_path(cmmd[0], argv);
+				if(!cmd_path)
+				{
 					fprintf(stderr, "%s: %d: %s: not found\n", argv[0], 1, cmmd[0]);
 					return (127);
+				}
 			}
+				
 			
 			if (stat(cmmd[0], &strtzrsa) == 0)
 				cmd_execution(cmmd[0], cmmd, env);
