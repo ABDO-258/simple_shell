@@ -129,6 +129,7 @@ void shell_cmd(char *string, int argc, char **argv, char **env)
 				cmd_execution(cmmd[0], cmmd, env);
 			else if (cmd_path)
 				cmd_execution(cmd_path, cmmd, env);
+			free(cmd_path);
 }
 /**
 *printenvironement - print the envirment variable
