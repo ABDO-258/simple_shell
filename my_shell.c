@@ -72,7 +72,7 @@ int main(int argc, char **argv, char **env)
 		{
 			/*printf("%ld\n", char_input);*/
 			exit_status = shell_cmd(ptprompt, argc, argv, env);
-			/*printf("%ld after shell_cmd\n", char_input);*/
+			/*printf("%d after shell_cmd\n", exit_status);*/
 		}
 		else
 			break;
@@ -126,6 +126,12 @@ int shell_cmd(char *string, int argc, char **argv, char **env)
 
 			if (cmmd[0] != NULL && stat(cmmd[0], &strtzrsa) != 0)
 				cmd_path = get_cmd_path(cmmd[0], argv);
+				if(!cmd_path)
+				{
+					fprintf(stderr, "%s: %d: %s: not found\n", argv[0], 1, cmmd[0]);
+					return (127);
+				}
+				
 			if (stat(cmmd[0], &strtzrsa) == 0)
 				cmd_execution(cmmd[0], cmmd, env);
 			else if (cmd_path)
@@ -134,7 +140,7 @@ int shell_cmd(char *string, int argc, char **argv, char **env)
 			}
 			else
 			{
-				fprintf(stderr, "%s: %d: %s: not found\n", argv[0], 1, cmmd[0]);
+				/**/
 				return 127;
 			}
 			free(cmd_path);
