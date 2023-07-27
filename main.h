@@ -16,7 +16,7 @@ extern char **environ;
 
 
 int _putchar(char c);
-void shell_cmd(char *string, int argc, char **argv, char **env);
+int shell_cmd(char *string, int argc, char **argv, char **env);
 char *_getenv(const char *name);
 char *get_cmd_path(char *command, char **argv);
 void printenvironement(void);
