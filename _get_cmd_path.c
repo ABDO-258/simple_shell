@@ -13,6 +13,7 @@ char *get_cmd_path(char *command, char **argv)
 	char *full_cmd;
 	struct stat starf;
 
+	(void)argv;
 	path = strdup(path2);
 	path_token = _strtok(path, ":");
 
@@ -43,9 +44,9 @@ char *get_cmd_path(char *command, char **argv)
 		path_token = _strtok(NULL, ":");
 	}
 	free(path);
-	fprintf(stderr, "%s: %d: %s: not found\n", argv[0], 1, command);
+	/*fprintf(stderr, "%s: %d: %s: not found\n", argv[0], 1, command);*/
 		/* Exit with status 127 to indicate command not found*/
-		_exit(127);
+		/*_exit(127);*/
 	return (NULL);
 }
 

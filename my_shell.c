@@ -51,6 +51,7 @@ int main(int argc, char **argv, char **env)
 	size_t n = 10;
 	char *ptprompt = malloc(sizeof(char) * n);
 	ssize_t char_input;
+	int exit_status = 0;
 
 	if (ptprompt == NULL) 
 	{
@@ -70,14 +71,14 @@ int main(int argc, char **argv, char **env)
 		if (char_input != -1)
 		{
 			/*printf("%ld\n", char_input);*/
-			shell_cmd(ptprompt, argc, argv, env);
+			exit_status = shell_cmd(ptprompt, argc, argv, env);
 			/*printf("%ld after shell_cmd\n", char_input);*/
 		}
 		else
 			break;
 	}
 	free(ptprompt);
-	return (0);
+	return (exit_status);
 }
 
 /**
@@ -88,7 +89,7 @@ int main(int argc, char **argv, char **env)
 *@env: environnement variable.
 *
 */
-void shell_cmd(char *string, int argc, char **argv, char **env)
+int shell_cmd(char *string, int argc, char **argv, char **env)
 {
 	char *cmd = "t", *cmd_path = NULL, *cmmd[20];
 	int i;
@@ -99,7 +100,7 @@ void shell_cmd(char *string, int argc, char **argv, char **env)
 
 			cmd = strtok(string, " \t\n");
 			if(cmd == NULL)
-				return;
+				return(0);
 			for (i = 0; cmd != NULL; i++)
 			{
 				cmmd[i] = cmd;
@@ -128,8 +129,17 @@ void shell_cmd(char *string, int argc, char **argv, char **env)
 			if (stat(cmmd[0], &strtzrsa) == 0)
 				cmd_execution(cmmd[0], cmmd, env);
 			else if (cmd_path)
+			{
 				cmd_execution(cmd_path, cmmd, env);
+			}
+			else
+			{
+				fprintf(stderr, "%s: %d: %s: not found\n", argv[0], 1, cmmd[0]);
+				return 127;
+			}
 			free(cmd_path);
+			free(cmd);
+			return (0); 
 }
 /**
 *printenvironement - print the envirment variable
