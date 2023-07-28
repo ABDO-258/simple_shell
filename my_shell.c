@@ -1,17 +1,5 @@
 #include "main.h"
-/**
-*promptprint - print the prmpt
-*
-*/
-void promptprint(void)
-{
-	_putchar('(');
-	_putchar('$');
-	_putchar(')');
-	_putchar(' ');
-
-}
-
+#include <errno.h>
 /**
 *cmd_execution - execution of a command
 *@command:command to be executed
@@ -20,21 +8,40 @@ void promptprint(void)
 *
 *Return:  0 if success
 */
-void cmd_execution(char *command, char *cmmd[], char **env)
+int cmd_execution(char *command, char *cmmd[], char **env)
 {
 	pid_t pid;
-	int status;
+	int status, exit_status = 0, flag = 0;
 
 	pid = fork();
 	if (pid == -1)
-		perror("Error:fork");
+	{
+		perror("Error: fork");
+		return (1);
+	}
 	else if (pid == 0)
 	{
 		if (execve(command, cmmd, env) == -1)
-			perror("Error:");
+		{
+			if (errno == ENOENT)
+			{
+				flag = 1;
+			}
+		}
+		_exit(0);
 	}
 	else
+	{
 		wait(&status);
+		if (WIFEXITED(status))
+		{
+			exit_status = WEXITSTATUS(status);
+			if (flag == 1)
+				exit_status = 2;
+		}
+		return (exit_status);
+	}
+	return (0);
 }
 
 
@@ -53,7 +60,7 @@ int main(int argc, char **argv, char **env)
 	ssize_t char_input;
 	int exit_status = 0;
 
-	if (ptprompt == NULL) 
+	if (ptprompt == NULL)
 	{
 		perror("Error: malloc failed");
 		exit(EXIT_FAILURE);
@@ -88,67 +95,50 @@ int main(int argc, char **argv, char **env)
 *@argv:argument vector.
 *@env: environnement variable.
 *
+*Return:  status
 */
 int shell_cmd(char *string, int argc, char **argv, char **env)
 {
 	char *cmd = "t", *cmd_path = NULL, *cmmd[20];
-	int i;
+	int i, exs;
 	struct stat strtzrsa;
 
 	(void)argc;
-	/*(void)argv;*/
-
 			cmd = strtok(string, " \t\n");
-			if(cmd == NULL)
-				return(0);
+			if (cmd == NULL)
+				return (0);
 			for (i = 0; cmd != NULL; i++)
 			{
 				cmmd[i] = cmd;
 				cmd = strtok(NULL, " \n");
 			}
 			cmmd[i] = NULL;
-
-
 			if (strcmp(cmmd[0], "exit") == 0)
-			{
-				if (!cmmd[1])
-				{
-					free(string);
-					_exit(0);
-				}
-				else
 				my_exit(cmmd, argc, argv, env);
-			}
-
-
 			if (strcmp(cmmd[0], "env") == 0)
 			printenvironement();
-
 			if (cmmd[0] != NULL && stat(cmmd[0], &strtzrsa) != 0)
 			{
-				cmd_path = get_cmd_path(cmmd[0], argv);
-				if(!cmd_path)
+				get_cmd_path(cmmd[0], argv);
+				if (!cmd_path)
 				{
 					fprintf(stderr, "%s: %d: %s: not found\n", argv[0], 1, cmmd[0]);
 					return (127);
 				}
 			}
-				
-			
 			if (stat(cmmd[0], &strtzrsa) == 0)
-				cmd_execution(cmmd[0], cmmd, env);
+			{
+				exs = cmd_execution(cmmd[0], cmmd, env);
+				if (exs == 2)
+					exit(2);
+			}
 			else if (cmd_path)
-			{
-				cmd_execution(cmd_path, cmmd, env);
-			}
+				exs = cmd_execution(cmd_path, cmmd, env);
 			else
-			{
-				/**/
-				return 127;
-			}
+				return (127);
 			free(cmd_path);
 			free(cmd);
-			return (0); 
+			return (exs);
 }
 /**
 *printenvironement - print the envirment variable

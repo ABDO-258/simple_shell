@@ -2,7 +2,8 @@
 
 /**
 *get_cmd_path - a fonction to get the cmd full path
-*@command:input command
+*@command:input command.
+*@argv:argument vector.
 *
 *Return:  command path
 */
@@ -38,17 +39,11 @@ char *get_cmd_path(char *command, char **argv)
 			free(path);
 			return (full_cmd);
 		}
-
-
 		free(full_cmd);
 		path_token = _strtok(NULL, ":");
 	}
 	fprintf(stderr, "%s: %d: %s: not found\n", argv[0], 1, command);
 	free(path);
-	
-	
-		/* Exit with status 127 to indicate command not found*/
-		/*_exit(127);*/
 	return (NULL);
 }
 
